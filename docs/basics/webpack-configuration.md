@@ -23,7 +23,18 @@ The [ShakaCode Team](http://www.shakacode.com) _recommends_ this approach for pr
 
 The two best examples of this pattern are the [react-webpack-rails-tutorial](https://github.com/shakacode/react-webpack-rails-tutorial) and the integration test example in [spec/dummy](https://github.com/shakacode/react_on_rails/tree/master/spec/dummy).
 
-In this case, you don't need to understand the nuances of customization of your Wepback config via the [Webpacker mechanism](./docs/additional-reading/webpack-tips.md).
+In this case, you don't need to understand the nuances of customization of your Webpack config via the [Webpacker mechanism](./docs/additional-reading/webpack-tips.md).
+
+You can access values in the `config/webpacker.yml`
+
+```js
+const { config, devServer } = require('@rails/webpacker');
+```
+
+You will want consider using some of the same values set in these files:
+
+* https://github.com/rails/webpacker/blob/master/package/environments/base.js
+* https://github.com/rails/webpacker/blob/master/package/environments/development.js
 
 ## Option 2: Default Generator Setup: rails/webpacker app/javascript
 

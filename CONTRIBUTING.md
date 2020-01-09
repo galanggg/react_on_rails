@@ -101,11 +101,14 @@ yarn run build
 yarn install-react-on-rails
 ```
 
-Install the local package by using yarn link, like this:
+The install-react-on-rails command will run `yarn link` and add the symlink. You can see your links with this commmand `ls -l ~/.config/yarn/link`.
+
+Install the local package by using yarn link in your other project, like this:
 ```sh
-cd spec/dummy
-yarn
-```
+cd <where you have a package.json referencing react-on-rails>
+yarn link react-on-rails
+```                     
+This yarn link command will setup the symlink in your project. You can run this command to see the symlink: `ls -l node_modules/react-on-rails` 
 
 Note, yarn will run the `postinstall` script of `spec/dummy/client` which runs `yarn link` to set up a sym link to the parent package.
 
