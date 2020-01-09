@@ -99,7 +99,6 @@ module ReactOnRails
       configure_generated_assets_dirs_deprecation
       configure_skip_display_none_deprecation
       ensure_generated_assets_dir_present
-      ensure_server_bundle_js_file_has_no_path
       check_i18n_directory_exists
       check_i18n_yml_directory_exists
       check_server_render_method_is_only_execjs
@@ -202,18 +201,6 @@ module ReactOnRails
       files << server_bundle_js_file if server_bundle_js_file.present?
 
       self.webpack_generated_files = files
-    end
-
-    def ensure_server_bundle_js_file_has_no_path
-      return unless server_bundle_js_file.include?(File::SEPARATOR)
-
-      assets_dir = ReactOnRails::Utils.generated_assets_full_path
-      self.server_bundle_js_file = File.basename(server_bundle_js_file)
-
-      Rails.logger.warn do
-        "[DEPRECATION] ReactOnRails: remove path from server_bundle_js_file in configuration. "\
-      "All generated files must go in #{assets_dir}. Using file basename #{server_bundle_js_file}"
-      end
     end
 
     def configure_skip_display_none_deprecation
