@@ -34,7 +34,8 @@ module ReactOnRails
       symlink_non_digested_assets_regex: nil,
       build_test_command: "",
       build_production_command: "",
-      random_dom_id: DEFAULT_RANDOM_DOM_ID
+      random_dom_id: DEFAULT_RANDOM_DOM_ID,
+      same_bundle_for_client_and_server: false
     )
   end
 
@@ -47,7 +48,8 @@ module ReactOnRails
                   :webpack_generated_files, :rendering_extension, :build_test_command,
                   :build_production_command,
                   :i18n_dir, :i18n_yml_dir,
-                  :server_render_method, :symlink_non_digested_assets_regex, :random_dom_id
+                  :server_render_method, :symlink_non_digested_assets_regex, :random_dom_id,
+                  :same_bundle_for_client_and_server
 
     def initialize(node_modules_location: nil, server_bundle_js_file: nil, prerender: nil,
                    replay_console: nil,
@@ -59,9 +61,9 @@ module ReactOnRails
                    rendering_extension: nil, build_test_command: nil,
                    build_production_command: nil,
                    i18n_dir: nil, i18n_yml_dir: nil, random_dom_id: nil,
-                   server_render_method: nil, symlink_non_digested_assets_regex: nil)
+                   server_render_method: nil, symlink_non_digested_assets_regex: nil,
+                   same_bundle_for_client_and_server: nil)
       self.node_modules_location = node_modules_location.present? ? node_modules_location : Rails.root
-      self.server_bundle_js_file = server_bundle_js_file
       self.generated_assets_dirs = generated_assets_dirs
       self.generated_assets_dir = generated_assets_dir
       self.build_test_command = build_test_command
@@ -83,6 +85,8 @@ module ReactOnRails
       self.skip_display_none = skip_display_none
 
       # Server rendering:
+      self.server_bundle_js_file = server_bundle_js_file
+      self.same_bundle_for_client_and_server = same_bundle_for_client_and_server
       self.server_renderer_pool_size = self.development_mode ? 1 : server_renderer_pool_size
       self.server_renderer_timeout = server_renderer_timeout # seconds
 
@@ -197,7 +201,7 @@ module ReactOnRails
     def ensure_webpack_generated_files_exists
       return unless webpack_generated_files.empty?
 
-      files = ["hello-world-bundle.js"]
+      files = ["manifest.json"]
       files << server_bundle_js_file if server_bundle_js_file.present?
 
       self.webpack_generated_files = files

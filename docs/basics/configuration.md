@@ -105,9 +105,11 @@ ReactOnRails.configure do |config|
   # The default is `%w( manifest.json )` as will be sufficient for most webpacker builds.
   # However, if you are generated a server bundle that is NOT hashed (present in manifest.json),
   # then include the file in this list like this: 
-  #
   config.webpack_generated_files = %w( server-bundle.js manifest.json )
-  
+  # Note, be sure NOT to include your server-bundle.js if it is hashed, or else React on Rails will
+  # think the server-bundle.js is missing every time for test runs. 
+  # In the future, we'll require the server-bundle.js to be hashed 
+
   # You can optionally add values to your rails_context. See example below for RenderingExtension
   # config.rendering_extension = RenderingExtension
 
@@ -126,7 +128,12 @@ ReactOnRails.configure do |config|
   # If you are hashing this file (supposing you are using the same file for client rendering), then
   # you should include a name that matches your bundle name in your webpack config.
   config.server_bundle_js_file = "server-bundle.js"
-
+  
+  # This value only affects using the webpack-dev-server 
+  # If you wanted to use the same bundle for client and server, you'd set this to `true`.
+  # Normally, you have different bundles for client and server, thus, the default is false.    
+  config.same_bundle_for_client_and_server = false
+  
   # If set to true, this forces Rails to reload the server bundle if it is modified
   # Default value is Rails.env.development?
   #
