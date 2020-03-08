@@ -111,21 +111,59 @@ First, check that the `hmr` option is `true` in your `config/webpacker.yml` file
 
 The basic setup will have HMR working with the default webpacker setup. However, the basic will cause a full page refresh each time you save a file.
 
+To have proper React hot loading:
 
 
+1. Add the `react-hot-loader` and ` @hot-loader/react-dom` npm packages.
+  ```sh
+  yarn add --dev react-hot-loader @hot-loader/react-dom
+  ```
 
+2. Add changes like this to your entry points
 
+```diff
+// app/javascript/packs/hello_react.jsx
 
+import React from 'react';
++ import { hot } from 'react-hot-loader/root';
+```
 
+```diff
+- export default HelloWorld;
++ export default hot(HelloWorld);
+```
 
+3. Adjust your webpack configuration for development so that `sourceMapContents` option for the sass
+loader is `false`
 
+```diff
+// config/webpack/development.js
 
+process.env.NODE_ENV = process.env.NODE_ENV || 'development'
 
+const environment = require('./environment')
 
+// allows for editing sass/scss files directly in browser
++ if (!module.hot) {
++   environment.loaders.get('sass').use.find(item => item.loader === 'sass-loader').options.sourceMapContents = false
++ }
++ 
+module.exports = environment.toWebpackConfig()
+```
 
+4. Adjust your `config/webpack/environment.js` for a 
 
+```diff
+// config/webpack/environment.js
 
+// ...
 
+// Fixes: React-Hot-Loader: react-🔥-dom patch is not detected. React 16.6+ features may not work.
+// https://github.com/gaearon/react-hot-loader/issues/1227#issuecomment-482139583
++ environment.config.merge({ resolve: { alias: { 'react-dom': '@hot-loader/react-dom' } } });
+
+module.exports = environment;
+```
 
 
 
@@ -272,7 +310,9 @@ and you will see your live app and you can share this URL with your friends. Con
 
 ## Turning on Server Rendering
 
-You can turn on server rendering by simply changing the `prerender` option to `true`:
+You can turn on server rendering by:
+
+1. Changing the `prerender` option to `true`:
 
 ```erb
 <%= react_component("HelloWorld", props: @hello_world_props, prerender: true) %>
@@ -287,6 +327,25 @@ If you want to test this out with HMR, then you also need to add this line to yo
 
 More likely, you will create a different build file for server rendering. However, if you want to
 use the same file from the webpack-dev-server, you'll need to add that line.
+
+
+
+
+
+PUT IN THE CHANGES TO ALLOW FOR creating different server and client bundles
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Then push to Heroku:
 

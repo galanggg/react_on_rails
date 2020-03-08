@@ -17,21 +17,24 @@ Changes since last non-beta release.
 *Please add entries here for your pull requests that are not yet released.*
 ### [11.4.0] - 2020-01-19
 #### Changed
+- Changes enable hashing of the server bundle so that it's in the manifest. This is important
+  because the `assets:clean` "enhancement" of rails/webpacker deletes any files that are not
+  in the `manifest.json`. Thus, it's critical to fingerprint the server bundle and adding it to 
+  the manifest.
+  
 - Added configuration option `same_bundle_for_client_and_server` with default `false` because
-
   1. Production applications would typically have a server bundle that differs from the client bundle
   2. This change only affects trying to use HMR with react_on_rails with rails/webpacker. 
   
   The previous behavior was to always go to the webpack-dev-server for the server bundle if the 
-  webpack-dev-server was running _and_ the server bundle was found in the `manifest.json`. Because
-  the `assets:clean` enhancement of rails/webpacker deletes any files that are not in the `manifest.json`,
-  we recommend fingerprinting the server bundle and adding it to the manifest.
+  webpack-dev-server was running _and_ the server bundle was found in the `manifest.json`. 
   
   If you are using the **same bundle for client and server rendering**, then set this configuration option
   to `true`. By [justin808](https://github.com/justin808/1240).
 
 #### Improved
 - Removed unnecessary restriction to keep the server bundle in the same directory with the client bundles. Rails/webpacker 4 has an advanced cleanup that will remove any files in the directory of other webpack files. Removing this restriction allows the server bundle to be created in a sibling directory. Note, the rails/webpacker cleanup will remove any files in child directories. By [justin808](https://github.com/justin808/1240).
+- The gem execjs no longer needs to be explicitly included. When Rails is installed without `Sprockets`, `ExecJS` was not required, resulting in the error: `uninitialized constant #<Class:0x00007fc487215bf8>::ExecJS` 
 
 ### [11.3.0] - 2019-05-24
 #### Added

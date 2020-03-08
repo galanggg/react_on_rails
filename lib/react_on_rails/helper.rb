@@ -10,6 +10,7 @@ require "addressable/uri"
 require "react_on_rails/utils"
 require "react_on_rails/json_output"
 require "active_support/concern"
+require "execjs"
 
 module ReactOnRails
   module Helper
@@ -258,6 +259,8 @@ module ReactOnRails
       html = result["html"]
       console_log_script = result["consoleLogScript"]
       raw("#{html}#{render_options.replay_console ? console_log_script : ''}")
+
+        # TODO, this error is probably different for mini_racer
     rescue ExecJS::ProgramError => err
       raise ReactOnRails::PrerenderError, component_name: "N/A (server_render_js called)",
                                           err: err,
